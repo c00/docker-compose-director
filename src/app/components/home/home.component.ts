@@ -23,6 +23,16 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   }
 
+  public async ngOnInit() {
+    this.dockerStatus();
+    //todo make it correctly tell whih one is active.
+  }
+
+  public addConfig() {
+    //todo
+    console.warn("Not implemented yet");
+  }
+
   public async toggle(c: DockerComposeConfig) {
     const wasActive = c.status === 'active';
     await this.stopActive();
@@ -44,10 +54,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     c.status = 'starting';
     await this.es.exec(`docker-compose -f ${c.file} up -d`);
     c.status = 'active';
-  }
-
-  public async ngOnInit() {
-    this.dockerStatus();
   }
 
   private async dockerStatus() {

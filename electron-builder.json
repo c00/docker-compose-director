@@ -1,5 +1,5 @@
 {
-  "productName": "angular-electron",
+  "productName": "docker-compose-director",
   "directories": {
     "output": "release/"
   },

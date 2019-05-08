@@ -1,7 +1,4 @@
 <div class="container">
-  <h1 class="title">
-    {{ 'pages.home.title' | translate }}
-  </h1>
 
   <div class="configs">
     <div *ngFor="let c of configs" [ngClass]="c.status">
@@ -9,7 +6,6 @@
         <span *ngIf="c.status === 'active'">{{ 'pages.home.stop' | translate }}</span>
         <span *ngIf="c.status !== 'active'">{{ 'pages.home.start' | translate }}</span>
         <!-- <span *ngIf="c.status !== 'stopped' && c.status !== 'active'">{{ 'pages.home.working' | translate }}</span> -->
-        
       </button>
       {{ c.name }} <span *ngIf="c.status !== 'stopped'">- {{ 'actions.' + c.status | translate }}</span>
 
