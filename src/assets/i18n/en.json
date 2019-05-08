@@ -1,0 +1,19 @@
+{
+  "pages": {
+      "home": {
+          "title": "Docker Director",
+          "button-add": "Add configuration",
+          "active": " - Active",
+          "running": "Containers running: ",
+          "stop": "Stop",
+          "start": "Start",
+          "working": "Working..."
+      }
+  },
+  "actions": {
+    "starting": "Starting...",
+    "stopping": "Stoppig...",
+    "active": "Active",
+    "stopped": "Stopped"
+  }
+}

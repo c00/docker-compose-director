@@ -1,0 +1,16 @@
+@import '../../../styles';
+
+.container {
+  padding: $padding*2 $padding;
+
+  .title {
+    margin:0;
+  }
+}
+
+.configs {
+  
+  .active {
+    color: $primary;
+  }
+}

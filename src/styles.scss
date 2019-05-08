@@ -1,0 +1,69 @@
+//Colors
+$grey: #e0e0e0;
+$darkGrey: #455a64;
+$blue: #448aff;
+$yellow: #ffca28;
+
+$neutral: $grey;
+$primary: $blue;
+$warning: $yellow;
+
+//Other vars
+$size: 4px;
+$padding: $size * 2;
+$radius: 4px;
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+
+  height: 100%;
+
+  color: $darkGrey;
+  background: $grey;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+
+.button {
+  border: 1px solid darken($neutral, 10);
+  background-color: #fff;
+  padding: $padding;
+  margin: $size 0;
+  border-radius: $radius;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color .3s ease, color .3s ease;
+
+  &:hover {
+    background-color: darken(#fff, 15);
+  }
+
+  &.primary {
+    background-color: $primary;
+  }
+
+  &.warning {
+    background-color: $warning;
+  }
+}
+
+.tag {
+  font-size: .9em;
+  font-weight: bold;
+  display: inline-block;
+  padding: $size;
+  border: 1px solid darken($neutral, 10);
+  background-color: #fff;
+  margin: $size;
+  border-radius: $radius;
+}
+
+pre {
+  border: 1px solid darken($neutral, 20);
+  background-color: $neutral;
+  padding: $padding;
+  margin: $size 0;
+  border-radius: $radius;
+  font-family: monospace;
+}
