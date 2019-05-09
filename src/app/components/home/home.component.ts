@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { DockerComposeConfig, DockerContainer } from '../../models/Docker';
 import { ElectronService } from '../../providers/electron.service';
+import { DockerService } from '../../providers/docker.service';
 
 @Component({
   selector: 'app-home',
@@ -10,27 +11,26 @@ import { ElectronService } from '../../providers/electron.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   //todo make configurable and stuff.
-  configs: DockerComposeConfig[] = [
-    { name: 'Netques', file: '/home/coo/dev/www/docker/matthias-docker/docker-compose.yml', status: 'active' },
-    { name: 'Wanna Train', file: '/home/coo/dev/www/docker/wannatrain-docker/docker-compose.yml', status: 'stopped' },
-    { name: 'Development', file: '/home/coo/dev/www/docker/dev/docker-compose.yml', status: 'stopped' },
-  ];
+  configs: DockerComposeConfig[] = [];
   containers: DockerContainer[] = [];
 
   interval: NodeJS.Timer;
 
-  constructor(private es: ElectronService) { 
-
+  constructor(
+    private es: ElectronService,
+    private docker: DockerService,
+  ) { 
+    docker.containersChanged.subscribe(containers => this.containers = containers );
+    docker.configsChanges.subscribe(configs => this.configs = configs );
   }
 
   public async ngOnInit() {
-    this.dockerStatus();
     //todo make it correctly tell whih one is active.
   }
 
   public addConfig() {
     //todo
-    console.warn("Not implemented yet");
+    this.docker.addConfig();
   }
 
   public async toggle(c: DockerComposeConfig) {
@@ -38,36 +38,28 @@ export class HomeComponent implements OnInit, OnDestroy {
     await this.stopActive();
     if (wasActive) return 
     
-    return this.start(c);
+    await this.start(c);
+    this.getContainers();
   }
 
   private async stopActive() {
     const c = this.configs.find(c => c.status === 'active');
     if (!c) return;
 
-    c.status = 'stopping';
-    await this.es.exec(`docker-compose -f ${c.file} down`);
-    c.status = 'stopped';
+    return this.docker.stopConfig(c);
   }
 
   private async start(c: DockerComposeConfig) {
-    c.status = 'starting';
-    await this.es.exec(`docker-compose -f ${c.file} up -d`);
-    c.status = 'active';
+    return this.docker.startConfig(c);
   }
 
-  private async dockerStatus() {
-    this.interval = setInterval(async () => {
-      const output = await this.es.exec('docker container ls');
-      this.containers = DockerContainer.containersFromCli(output);
-    }, 1000);
+  private async getContainers() {
+    const output = await this.es.exec('docker container ls');
+    this.containers = DockerContainer.containersFromCli(output);
   }
 
   public ngOnDestroy() {
-    if (this.interval) {
-      this.interval.unref();
-      this.interval = null;
-    }
+    this.docker.stopChecks(false);
   }
 
 }

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 
 // If you import a module but never use any of the imported values other than as TypeScript types,
 // the resulting javascript file will look as if you never imported the module at all.
-import { ipcRenderer, webFrame, remote } from 'electron';
+import { ipcRenderer, webFrame, remote, OpenDialogOptions, FileFilter } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
+import { isArray } from 'util';
 
 @Injectable()
 export class ElectronService {
@@ -25,6 +26,21 @@ export class ElectronService {
       this.childProcess = window.require('child_process');
       this.fs = window.require('fs');
     }
+  }
+
+  public async openFile(filter?: FileFilter): Promise<string|null> {
+    return new Promise((resolve, reject) => {
+      const options: OpenDialogOptions = {
+        properties: ['openFile'],
+        filters: []
+      };
+      if (filter) options.filters.push(filter);
+
+      this.remote.dialog.showOpenDialog(options, (file) => {
+        if (file && file[0]) return resolve(file[0]);
+        return resolve(null);
+      }); 
+    });
   }
 
   public isElectron = () => {
