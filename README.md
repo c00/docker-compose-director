@@ -2,12 +2,18 @@
 
 Docker Compose Director lets you switch in between local docker compose files quickly.
 
-##Todo
+This has so far only been tested on Ubuntu, and it's assuming that your containers have `container_name` set in docker-compose.
 
-Save configuration
-Save window size on exit
-Add to system tray option.
-Add icon
+It is using the `docker` and `docker-compose` commands.
+
+## Todo
+
+- Add icons for start again, restart, switch, start-also
+- Add rename option
+- Save window size on exit
+- Add to system tray option.
+- Add icon
+
 
 ## To build for development
 

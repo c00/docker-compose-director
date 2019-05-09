@@ -1,6 +1,8 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, BrowserWindowConstructorOptions } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as fs from 'fs';
+import { Settings } from './src/app/models/Settings';
 
 let win, serve;
 const args = process.argv.slice(1);
@@ -8,18 +10,28 @@ serve = args.some(val => val === '--serve');
 
 function createWindow() {
 
-  const electronScreen = screen;
-  const size = electronScreen.getPrimaryDisplay().workAreaSize;
-
+  //const electronScreen = screen;
+  //const size = electronScreen.getPrimaryDisplay().workAreaSize;
   const width = (serve) ? 900 : 300;
-  // Create the browser window.
-  win = new BrowserWindow({
+  const options: BrowserWindowConstructorOptions = {
     width: width,
     height: 300,
     webPreferences: {
       nodeIntegration: true,
     }
-  });
+  };
+  
+  //todo store and set height and width
+  /* if (fs.existsSync(this.getSettingsFile())){
+    const file = this.remote.app.getPath('userData') + "/settings.json";
+    const s: Settings = JSON.parse(fs.readFileSync(this.getSettingsFile()).toString());
+    if (s.width) options.width = s.width;
+    if (s.height) options.height = s.height;
+    if (s.fullScreen) options.fullscreen = s.fullScreen;
+  } */
+
+  // Create the browser window.
+  win = new BrowserWindow(options);
 
   if (serve) {
     require('electron-reload')(__dirname, {
@@ -37,6 +49,10 @@ function createWindow() {
   if (serve) {
     win.webContents.openDevTools();
   }
+
+  win.on('closing', () => {
+    console.log("closing");
+  });
 
   // Emitted when the window is closed.
   win.on('closed', () => {

@@ -13,15 +13,27 @@ export class DockerService {
   public configsChanges = new BehaviorSubject<DockerComposeConfig[]>([]);
   public containersChanged = new BehaviorSubject<DockerContainer[]>([]);
   private configs: DockerComposeConfig[] = [
-    { name: 'Netques', file: '/home/coo/dev/www/docker/matthias-docker/docker-compose.yml', status: 'stopped' },
+    /* { name: 'Netques', file: '/home/coo/dev/www/docker/matthias-docker/docker-compose.yml', status: 'stopped' },
     { name: 'Wanna Train', file: '/home/coo/dev/www/docker/wannatrain-docker/docker-compose.yml', status: 'stopped' },
-    { name: 'Development', file: '/home/coo/dev/www/docker/dev/docker-compose.yml', status: 'stopped' },
+    { name: 'Development', file: '/home/coo/dev/www/docker/dev/docker-compose.yml', status: 'stopped' }, */
   ];
 
-  constructor(private es: ElectronService) {
-    //todo get from saved data
+  constructor(private es: ElectronService) {    
+    this.init();
+  }
+
+  private async init() {
+    const s = await this.es.getSettings();
+    this.configs = s.configs || [];
     this.configsChanges.next(this.configs);
     this.getActiveConfig();
+  }
+
+  private async saveConfigs() {
+    const s = await this.es.getSettings();
+    s.configs = this.configs;
+    this.es.saveSettings(s);
+
   }
 
   public async addConfig() {
@@ -36,7 +48,8 @@ export class DockerService {
       .replace(/(docker)/i, '')
       .trim();
 
-    this.configs.push({ name, file, status: 'stopped'})
+    this.configs.push({ name, file, status: 'stopped'});
+    this.saveConfigs();
   }
 
   public async stopConfig(c: DockerComposeConfig) {
